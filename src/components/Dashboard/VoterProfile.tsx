@@ -1,14 +1,17 @@
 'use client';
 
+import { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/AuthContext';
 import useTranslation from '@/hooks/useTranslation';
 import { User, CheckCircle, Calendar, MapPin, ExternalLink, Shield, Zap, Bell, Download, QrCode, Activity, Newspaper, Radio, ArrowUpRight, Info, AlertTriangle, Clock, Search, Globe, Server, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useMemo } from 'react';
-import TurnoutAnalytics from './TurnoutAnalytics';
-import LiveElectionResults from './LiveElectionResults';
-import CandidateManifesto from './CandidateManifesto';
-import VoterResources from './VoterResources';
+
+// Dynamic imports for sub-components to optimize dashboard performance
+const TurnoutAnalytics = dynamic(() => import('./TurnoutAnalytics'), { ssr: false });
+const LiveElectionResults = dynamic(() => import('./LiveElectionResults'), { ssr: false });
+const CandidateManifesto = dynamic(() => import('./CandidateManifesto'), { ssr: false });
+const VoterResources = dynamic(() => import('./VoterResources'), { ssr: false });
 
 export default function VoterProfile() {
   const { user, voterCount } = useAuth();
@@ -67,15 +70,15 @@ export default function VoterProfile() {
       </div>
 
       {/* BENTO BOX DASHBOARD LAYOUT */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '2rem', marginBottom: '3rem' }}>
+      <div className="bento-grid" style={{ display: 'grid', gap: '2rem', marginBottom: '3rem' }}>
         
         {/* ROW 1: Digital ID (Span 8) & Quick Stats (Span 4) */}
         <motion.div 
-          className="glass-card" 
-          style={{ gridColumn: 'span 8', padding: '3rem', background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(2, 6, 23, 0.8))', border: '1px solid var(--primary)', position: 'relative', overflow: 'hidden' }}
+          className="glass-card bento-item-large" 
+          style={{ padding: '3rem', background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(2, 6, 23, 0.8))', border: '1px solid var(--primary)', position: 'relative', overflow: 'hidden' }}
         >
           <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'var(--primary)', filter: 'blur(120px)', opacity: 0.15 }} />
-          <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', position: 'relative', zIndex: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
             <div style={{ background: 'white', padding: '1rem', borderRadius: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
               <QrCode size={140} color="#020617" />
             </div>
@@ -106,16 +109,16 @@ export default function VoterProfile() {
               </div>
 
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button onClick={handleDownload} disabled={isDownloading} className="btn-primary" style={{ padding: '1rem 2rem' }}>
+                <button onClick={handleDownload} aria-label="Download Secure Voter Card" disabled={isDownloading} className="btn-primary" style={{ padding: '1rem 2rem' }}>
                   {isDownloading ? 'Encrypting...' : <><Download size={18} /> Download Secure Card</>}
                 </button>
-                <button className="btn-ghost" style={{ padding: '1rem 1.5rem' }}><Settings size={18} /> Manage Access</button>
+                <button className="btn-ghost" aria-label="Manage Access Settings" style={{ padding: '1rem 1.5rem' }}><Settings size={18} /> Manage Access</button>
               </div>
             </div>
           </div>
         </motion.div>
 
-        <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="bento-item-small" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {quickStats.map((stat, i) => (
             <motion.div key={stat.id} className="stat-card" style={{ padding: '1.5rem', flex: 1, display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
               <div style={{ width: '64px', height: '64px', borderRadius: '1rem', background: stat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${stat.color}30` }}>
@@ -133,11 +136,11 @@ export default function VoterProfile() {
         </div>
 
         {/* ROW 2: Turnout (Span 8) & Intel Feed (Span 4) */}
-        <div style={{ gridColumn: 'span 8' }}>
+        <div className="bento-item-large">
           <TurnoutAnalytics />
         </div>
 
-        <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column' }}>
+        <div className="bento-item-small" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="glass-card" style={{ padding: '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '900', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -151,6 +154,7 @@ export default function VoterProfile() {
                 type="text" 
                 placeholder="Search intel feed..." 
                 className="search-input" 
+                aria-label="Search Intel Feed"
                 value={newsSearch}
                 onChange={(e) => setNewsSearch(e.target.value)}
                 style={{ width: '100%' }}
@@ -189,13 +193,13 @@ export default function VoterProfile() {
               </div>
               <h3 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '1.5rem' }}>{selectedNews.title}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', lineHeight: '1.8', marginBottom: '3rem' }}>{selectedNews.fullText}</p>
-              <button className="btn-primary" style={{ width: '100%', padding: '1.25rem' }} onClick={() => setSelectedNews(null)}>Acknowledge & Close</button>
+              <button className="btn-primary" aria-label="Acknowledge and Close News" style={{ width: '100%', padding: '1.25rem' }} onClick={() => setSelectedNews(null)}>Acknowledge & Close</button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', marginTop: '4rem' }}>
+      <div className="responsive-split-grid" style={{ display: 'grid', gap: '3rem', marginTop: '4rem' }}>
         <LiveElectionResults />
         <CandidateManifesto />
       </div>

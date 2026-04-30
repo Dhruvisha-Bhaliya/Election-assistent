@@ -33,7 +33,7 @@ export default function ElectionRoadmap() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              style={{ display: 'flex', gap: '2.5rem', position: 'relative', zIndex: 1 }}
+              style={{ display: 'flex', gap: '1.5rem', position: 'relative', zIndex: 1, flexWrap: 'wrap' }}
             >
               <div style={{ position: 'relative' }}>
                 <div style={{ 
@@ -59,6 +59,8 @@ export default function ElectionRoadmap() {
               <motion.div 
                 whileHover={{ scale: 1.02, x: 5 }}
                 className="glass-card" 
+                role="button"
+                aria-label={`Step ${step.id}: ${step.title}. ${step.status === 'active' ? 'Current Phase' : step.status}. Date: ${step.date}`}
                 style={{ 
                   padding: '2rem', flex: 1, 
                   border: step.status === 'active' ? '1px solid var(--primary)' : '1px solid var(--border)',
@@ -67,7 +69,7 @@ export default function ElectionRoadmap() {
                   overflow: 'hidden'
                 }}
               >
-                <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--text-dim)', fontSize: '0.875rem', fontWeight: '700' }}>
+                <div style={{ color: 'var(--text-dim)', fontSize: '0.875rem', fontWeight: '700', marginBottom: '0.5rem' }}>
                   {step.date}
                 </div>
                 

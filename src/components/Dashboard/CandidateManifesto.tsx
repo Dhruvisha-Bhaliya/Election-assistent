@@ -76,6 +76,7 @@ export default function CandidateManifesto() {
               type="text" 
               placeholder="Search..." 
               className="search-input"
+              aria-label="Search Candidates"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ padding: '0.5rem 1rem 0.5rem 2.5rem' }}
@@ -89,6 +90,8 @@ export default function CandidateManifesto() {
           <button 
             key={cat}
             onClick={() => setActiveCategory(cat)}
+            aria-label={`Filter by ${cat}`}
+            aria-pressed={activeCategory === cat}
             style={{ 
               padding: '0.5rem 1rem', 
               borderRadius: '0.75rem', 
@@ -115,6 +118,8 @@ export default function CandidateManifesto() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ x: 4, background: 'rgba(255,255,255,0.05)' }}
+            role="button"
+            aria-label={`View manifesto for ${c.name}`}
             style={{ border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.02)', cursor: 'pointer', transition: 'all 0.2s' }}
             onClick={() => setSelected(c.id)}
           >
@@ -157,7 +162,7 @@ export default function CandidateManifesto() {
               className="glass-card"
               style={{ maxWidth: '700px', width: '100%', position: 'relative', border: '1px solid var(--primary)', padding: '3.5rem' }}
             >
-              <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}>
+              <button onClick={() => setSelected(null)} aria-label="Close Manifesto" style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}>
                 <X size={28} />
               </button>
               
@@ -185,9 +190,9 @@ export default function CandidateManifesto() {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-                <button className="btn-primary" style={{ flex: 1 }}>Support Now</button>
-                <button className="btn-ghost" style={{ flex: 1 }}><Download size={18} /> Manifesto</button>
-                <button className="btn-ghost" style={{ flex: 1 }}><Share2 size={18} /> Share</button>
+                <button className="btn-primary" aria-label="Support Candidate" style={{ flex: 1 }}>Support Now</button>
+                <button className="btn-ghost" aria-label="Download Manifesto" style={{ flex: 1 }}><Download size={18} /> Manifesto</button>
+                <button className="btn-ghost" aria-label="Share Manifesto" style={{ flex: 1 }}><Share2 size={18} /> Share</button>
               </div>
             </motion.div>
           </div>

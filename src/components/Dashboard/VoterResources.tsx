@@ -21,12 +21,14 @@ export default function VoterResources() {
         <BookOpen color="var(--primary)" size={20} /> Educational Resources & FAQ
       </h2>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '2rem' }}>
-        <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div className="bento-grid" style={{ display: 'grid', gap: '2rem' }}>
+        <div className="bento-item-large" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {faqs.map((faq, i) => (
             <div key={i} className="glass-card" style={{ padding: '0.5rem', border: '1px solid var(--border)' }}>
               <button 
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                aria-label={`Toggle FAQ: ${faq.q}`}
+                aria-expanded={openFaq === i}
                 style={{ width: '100%', padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none', color: 'white', cursor: 'pointer', textAlign: 'left' }}
               >
                 <span style={{ fontWeight: '800', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -48,7 +50,7 @@ export default function VoterResources() {
           ))}
         </div>
 
-        <div className="glass-card" style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '2rem' }}>
+        <div className="glass-card bento-item-small" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '2rem' }}>
           <h4 style={{ fontWeight: '900', fontSize: '1.1rem', color: 'var(--text)' }}>Official Quick Links</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
@@ -56,7 +58,7 @@ export default function VoterResources() {
               { label: 'Global Election Watch', icon: Globe },
               { label: 'Verify Electoral Roll', icon: Info }
             ].map((link, i) => (
-              <button key={i} className="btn-ghost" style={{ justifyContent: 'flex-start', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+              <button key={i} className="btn-ghost" aria-label={`Link to ${link.label}`} style={{ justifyContent: 'flex-start', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                 <link.icon size={18} color="var(--primary)" /> {link.label}
               </button>
             ))}

@@ -56,17 +56,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = (email: string, password: string) => {
-    const randomRegion = regions[Math.floor(Math.random() * regions.length)];
-    const newUser = { email, name: email.split('@')[0], region: randomRegion };
-    setUser(newUser);
-    localStorage.setItem('civic_user', JSON.stringify(newUser));
+    const users = JSON.parse(localStorage.getItem('civic_users') || '[]');
+    const existingUser = users.find((u: any) => u.email === email);
+    
+    if (!existingUser) {
+      throw new Error('No account found with this email. Please register first.');
+    }
+
+    if (existingUser.password !== password) {
+      throw new Error('Incorrect password. Please try again.');
+    }
+
+    setUser(existingUser);
+    localStorage.setItem('civic_user', JSON.stringify(existingUser));
   };
 
   const register = (email: string, name: string, password: string) => {
+    const users = JSON.parse(localStorage.getItem('civic_users') || '[]');
+    if (users.some((u: any) => u.email === email)) {
+      throw new Error('Email already registered. Please login.');
+    }
+
     const randomRegion = regions[Math.floor(Math.random() * regions.length)];
-    const newUser = { email, name, region: randomRegion };
-    setUser(newUser);
-    localStorage.setItem('civic_user', JSON.stringify(newUser));
+    const newUser = { email, name, region: randomRegion, password }; // Storing password for demo simulation
+    
+    // Save to users list but don't set as current user (require manual login)
+    localStorage.setItem('civic_users', JSON.stringify([...users, newUser]));
   };
 
   const logout = () => {

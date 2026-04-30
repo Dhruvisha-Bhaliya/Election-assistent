@@ -22,6 +22,7 @@ export default function LanguageSwitcher() {
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="btn-ghost"
+        aria-label="Switch Language"
         style={{
           padding: '0.625rem 1.25rem',
           borderRadius: '12px',
@@ -68,6 +69,7 @@ export default function LanguageSwitcher() {
               {languages.map((lang) => (
                 <button
                   key={lang.code}
+                  aria-label={`Switch to ${lang.name}`}
                   onClick={() => {
                     setLocale(lang.code as any);
                     setIsOpen(false);

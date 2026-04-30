@@ -54,15 +54,18 @@ export default function ComplaintSystem() {
         <button 
           onClick={() => setShowForm(!showForm)} 
           className="btn-primary"
+          aria-expanded={showForm}
+          aria-controls="complaint-form"
           style={{ padding: '0.75rem 1.5rem', fontSize: '0.9375rem', background: showForm ? 'rgba(239, 68, 68, 0.1)' : 'var(--primary)', color: showForm ? '#ef4444' : 'white', border: showForm ? '1px solid #ef4444' : 'none' }}
         >
-          {showForm ? <><X size={18} /> Cancel</> : <><Plus size={18} /> File Ticket</>}
+          {showForm ? <><X size={18} aria-hidden="true" /> Cancel</> : <><Plus size={18} aria-hidden="true" /> File Ticket</>}
         </button>
       </div>
 
       <AnimatePresence>
         {showForm && (
           <motion.div
+            id="complaint-form"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
@@ -81,8 +84,8 @@ export default function ComplaintSystem() {
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Issue Category</label>
-                    <select className="search-input" style={{ width: '100%', maxWidth: 'none', appearance: 'auto' }}>
+                    <label htmlFor="issue-category" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Issue Category</label>
+                    <select id="issue-category" className="search-input" style={{ width: '100%', maxWidth: 'none', appearance: 'auto' }} aria-label="Select issue category">
                       <option>Identity Correction</option>
                       <option>Booth Reassignment</option>
                       <option>Voter Slip Issues</option>
@@ -90,8 +93,9 @@ export default function ComplaintSystem() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Subject</label>
+                    <label htmlFor="subject-input" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Subject</label>
                     <input 
+                      id="subject-input"
                       type="text" 
                       className="search-input" 
                       style={{ width: '100%', maxWidth: 'none' }}
@@ -99,18 +103,21 @@ export default function ComplaintSystem() {
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       required
+                      aria-required="true"
                     />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Incident Details</label>
+                  <label htmlFor="incident-details" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-dim)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Incident Details</label>
                   <textarea 
+                    id="incident-details"
                     className="search-input" 
                     style={{ minHeight: '160px', width: '100%', maxWidth: 'none', padding: '1.5rem', resize: 'none' }}
                     placeholder="Describe the issue in detail..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     required
+                    aria-required="true"
                   />
                 </div>
                 <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ padding: '1.25rem', justifyContent: 'center', fontSize: '1.125rem' }}>

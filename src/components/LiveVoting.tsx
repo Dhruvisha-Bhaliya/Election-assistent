@@ -39,12 +39,12 @@ export default function LiveVoting() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--secondary)', marginBottom: '0.5rem' }}>
                 <div className="live-dot" />
-                <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Secure Voting Terminal</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t('evm_secure_terminal')}</span>
               </div>
-              <h2 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em', color: 'var(--text)' }}>Active Ballot</h2>
+              <h2 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em', color: 'var(--text)' }}>{t('evm_active_ballot')}</h2>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-dim)' }}>Session ID</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-dim)' }}>{t('evm_session_id')}</div>
               <div style={{ fontSize: '1rem', fontWeight: '800', fontFamily: 'monospace', color: 'var(--primary)' }}>#ELEC-2026-X9</div>
             </div>
           </div>
@@ -56,6 +56,9 @@ export default function LiveVoting() {
                 key={candidate.id}
                 whileHover={{ y: -5 }}
                 onClick={() => setSelected(candidate.id)}
+                aria-label={`Select candidate ${candidate.name}`}
+                aria-selected={selected === candidate.id}
+                role="button"
                 style={{
                   padding: '2rem',
                   borderRadius: '1.5rem',
@@ -103,6 +106,7 @@ export default function LiveVoting() {
               className="btn-primary" 
               disabled={!selected}
               onClick={() => setShowConfirm(true)}
+              aria-label="Verify and Cast Vote"
               style={{ padding: '1.25rem 3.5rem', fontSize: '1.125rem' }}
             >
               Verify & Cast Vote <ChevronRight size={20} />
@@ -114,9 +118,9 @@ export default function LiveVoting() {
           <div style={{ width: '100px', height: '100px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2.5rem', border: '2px solid var(--secondary)' }}>
             <ShieldCheck size={50} color="var(--secondary)" />
           </div>
-          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>Vote Confirmed</h2>
+          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>{t('evm_vote_confirmed')}</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', marginBottom: '3.5rem', maxWidth: '500px', margin: '0 auto 3.5rem' }}>
-            Your selection has been securely recorded in the national ledger. Thank you for participating in democracy.
+            {t('evm_success_msg')}
           </p>
           
           <div style={{ background: 'var(--surface-light)', padding: '2.5rem', borderRadius: '1.5rem', border: '1px solid var(--border)', display: 'inline-block' }}>
@@ -136,22 +140,22 @@ export default function LiveVoting() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               className="glass-card"
-              style={{ width: '100%', maxWidth: '500px', padding: '3.5rem', position: 'relative', zIndex: 1, textAlign: 'center', background: 'var(--surface)' }}
+              style={{ width: '100%', maxWidth: '500px', padding: '2rem', position: 'relative', zIndex: 1, textAlign: 'center', background: 'var(--surface)' }}
             >
               <div style={{ width: '80px', height: '80px', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
                 <AlertCircle size={40} color="var(--accent)" />
               </div>
-              <h3 style={{ fontSize: '1.75rem', fontWeight: '900', marginBottom: '1rem', color: 'var(--text)' }}>Final Confirmation</h3>
+              <h3 style={{ fontSize: '1.75rem', fontWeight: '900', marginBottom: '1rem', color: 'var(--text)' }}>{t('evm_final_confirmation')}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: '1.7' }}>
-                You are about to cast your vote for <br />
+                {t('evm_about_to_cast')} <br />
                 <strong style={{ color: 'var(--text)', fontSize: '1.25rem' }}>{candidates.find(c => c.id === selected)?.name}</strong>. <br />
-                This action is cryptographically final.
+                {t('evm_action_final')}
               </p>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '1rem' }}>
-                <button className="btn-ghost" disabled={isSubmitting} onClick={() => setShowConfirm(false)}>Review Selection</button>
-                <button className="btn-primary" disabled={isSubmitting} onClick={handleVote}>
-                  {isSubmitting ? 'Encrypting...' : 'Confirm & Submit'}
+                <button className="btn-ghost" aria-label="Review Selection" disabled={isSubmitting} onClick={() => setShowConfirm(false)}>{t('evm_review')}</button>
+                <button className="btn-primary" aria-label="Confirm and Submit Vote" disabled={isSubmitting} onClick={handleVote}>
+                  {isSubmitting ? 'Encrypting...' : t('evm_confirm_submit')}
                 </button>
               </div>
             </motion.div>
