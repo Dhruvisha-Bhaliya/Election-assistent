@@ -1,0 +1,24 @@
+# Use Node 20 to satisfy Next.js 15+ requirements
+FROM node:20-slim
+
+# Create and define the application directory
+WORKDIR /app
+
+# Copy package files first to leverage Docker's cache
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of your application code
+COPY . .
+
+# Build the Next.js application
+RUN npm run build
+
+# Inform Cloud Run that the app listens on port 8080
+EXPOSE 8080
+ENV PORT 8080
+
+# Start the application
+CMD ["npm", "start"]
