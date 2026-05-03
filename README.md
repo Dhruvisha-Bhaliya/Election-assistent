@@ -5,6 +5,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-12.1-orange?logo=firebase)](https://firebase.google.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Deployment: Live](https://img.shields.io/badge/Deployment-Live-success?logo=google-cloud)](https://election-assistant-662215332724.us-central1.run.app/)
+
+**Live Demo:** [election-assistant.run.app](https://election-assistant-662215332724.us-central1.run.app/)
 
 ![VoterConnect Hero](file:///C:/Users/DELL/.gemini/antigravity/brain/78d7884f-28ca-4b6d-8173-4a239030f34d/voterconnect_hero_1777822044803.png)
 
