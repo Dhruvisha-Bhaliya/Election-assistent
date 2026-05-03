@@ -1,37 +1,59 @@
-# STAGE 1: Install dependencies
+# --- STAGE 1: Install dependencies ---
 FROM node:20-slim AS deps
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 
-# STAGE 2: Build the application
+# Check for package-lock.json and copy it
+COPY package*.json ./
+
+# Install dependencies including sharp for image optimization
+RUN npm install
+RUN npm install sharp
+
+# --- STAGE 2: Build the application ---
 FROM node:20-slim AS builder
 WORKDIR /app
+
+# Copy node_modules from the deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Set environment variables for build time
-ENV NEXT_PUBLIC_FIREBASE_API_KEY=dummy_key_for_build
+# Set environment variables for build time (Dummy keys to satisfy Next.js build)
+ENV NEXT_PUBLIC_FIREBASE_API_KEY=dummy_key
 ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=dummy
 ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=dummy
 ENV NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=dummy
 ENV NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=dummy
 ENV NEXT_PUBLIC_FIREBASE_APP_ID=dummy
 
+# Disable telemetry during build
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
 
-# STAGE 3: Production runner
+# --- STAGE 3: Production runner ---
 FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Cloud Run requires port 8080 by default
 ENV PORT 8080
 ENV HOSTNAME "0.0.0.0"
 
+# Create a non-root user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 # Copy necessary files from builder
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 8080
 
