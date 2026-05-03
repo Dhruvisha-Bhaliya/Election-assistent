@@ -56,7 +56,7 @@ describe('LoginForm', () => {
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
     if (form) fireEvent.submit(form);
 
-    const errorMessage = await screen.findByText(/Please use a valid @gmail.com address/i);
+    const errorMessage = await screen.findByText(/Invalid email address/i);
     expect(errorMessage).toBeInTheDocument();
     expect(mockLogin).not.toHaveBeenCalled();
   });

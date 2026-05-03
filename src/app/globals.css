@@ -383,30 +383,52 @@ body {
   }
 }
 
-/* Bento Grid System */
+/* Overlap-proof Bento Grid */
 .bento-grid {
+  display: grid;
   grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  gap: 2rem;
+  width: 100%;
 }
 
 .bento-item-large {
   grid-column: span 8;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .bento-item-small {
   grid-column: span 4;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.responsive-split-grid {
-  grid-template-columns: 1fr 1fr;
-}
-
-@media (max-width: 1024px) {
+@media (max-width: 1400px) {
   .bento-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
   }
   .bento-item-large, .bento-item-small {
     grid-column: span 1;
   }
+}
+
+.responsive-split-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .responsive-split-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
   .responsive-split-grid {
     grid-template-columns: 1fr;
   }

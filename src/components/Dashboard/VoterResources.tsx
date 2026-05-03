@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, ChevronDown, BookOpen, Info, Globe, Shield } from 'lucide-react';
+import { HelpCircle, ChevronDown, BookOpen, Info, Globe, Shield, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import Swal from 'sweetalert2';
 
 export default function VoterResources() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -54,12 +55,39 @@ export default function VoterResources() {
           <h4 style={{ fontWeight: '900', fontSize: '1.1rem', color: 'var(--text)' }}>Official Quick Links</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
-              { label: 'Constitutional Rights', icon: Shield },
-              { label: 'Global Election Watch', icon: Globe },
-              { label: 'Verify Electoral Roll', icon: Info }
+              { label: 'Constitutional Rights', icon: Shield, url: 'law.gov/rights' },
+              { label: 'Global Election Watch', icon: Globe, url: 'elections.org/global' },
+              { label: 'Verify Electoral Roll', icon: Info, url: 'voterlist.gov/verify' }
             ].map((link, i) => (
-              <button key={i} className="btn-ghost" aria-label={`Link to ${link.label}`} style={{ justifyContent: 'flex-start', gap: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
-                <link.icon size={18} color="var(--primary)" /> {link.label}
+              <button 
+                key={i} 
+                onClick={() => {
+                  Swal.fire({
+                    title: 'Secure External Link',
+                    text: `Redirecting to ${link.url}. Your session remains encrypted.`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continue to Portal'
+                  }).then((res) => {
+                    if (res.isConfirmed) {
+                      const urls: {[key: string]: string} = {
+                        'Constitutional Rights': 'https://legislative.gov.in/constitution-of-india/',
+                        'Global Election Watch': 'https://www.idea.int/',
+                        'Verify Electoral Roll': 'https://voters.eci.gov.in/'
+                      };
+                      window.open(urls[link.label] || 'https://voters.eci.gov.in/', '_blank');
+                      Swal.fire({ title: 'Redirecting...', text: 'Connecting to official gateway', icon: 'success', timer: 1500, showConfirmButton: false });
+                    }
+                  });
+                }}
+                className="btn-ghost" 
+                aria-label={`Link to ${link.label}`} 
+                style={{ justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', width: '100%' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <link.icon size={18} color="var(--primary)" /> {link.label}
+                </div>
+                <ExternalLink size={14} color="var(--text-dim)" />
               </button>
             ))}
           </div>

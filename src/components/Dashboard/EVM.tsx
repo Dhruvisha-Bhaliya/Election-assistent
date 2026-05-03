@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { ShieldCheck, Printer, CheckCircle2, AlertCircle, Sun, Heart, Trees, Zap, Leaf } from 'lucide-react';
+import { ShieldCheck, Printer, CheckCircle2, AlertCircle, Sun, Heart, Trees, Zap, Leaf, Shield, Cpu, Activity } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 const candidates = [
@@ -32,160 +32,131 @@ export default function EVM({ onComplete }: { onComplete: () => void }) {
     setVvpatCandidate(candidates.find(c => c.id === id));
     setIsCasting(true);
     
-    // Simulate real machine processing delay
     await new Promise(r => setTimeout(r, 1000));
     playBeep();
     
-    // Show VVPAT Slip for 7 seconds (India Standard)
     setShowVVPAT(true);
     await new Promise(r => setTimeout(r, 7000));
     setShowVVPAT(false);
     
-    // Finalize recording
     recordVote(id);
     onComplete();
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
-      {/* Physical Machine UI */}
-      <div className="glass-card" style={{ 
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3rem' }}>
+      {/* Modern EVM Terminal Design */}
+      <div style={{ 
         width: '100%', 
-        maxWidth: '550px', 
-        padding: '2.5rem', 
-        background: 'linear-gradient(135deg, #1e293b, #0f172a)', 
-        border: '10px solid #020617',
-        borderRadius: '2rem',
-        boxShadow: '0 40px 80px -12px rgba(0, 0, 0, 0.6), inset 0 2px 10px rgba(255,255,255,0.05)'
+        maxWidth: '700px', 
+        background: '#0f172a', 
+        borderRadius: '2.5rem', 
+        padding: '3.5rem', 
+        border: '12px solid #1e293b',
+        boxShadow: '0 50px 100px -20px rgba(0,0,0,0.7), inset 0 0 40px rgba(0,0,0,0.5)',
+        position: 'relative'
       }}>
-        {/* Machine Header */}
-        <div style={{ background: '#020617', padding: '1.25rem', borderRadius: '1rem', marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #1e293b' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ 
-              width: '14px', 
-              height: '14px', 
-              borderRadius: '50%', 
-              background: isCasting ? '#ef4444' : '#10b981', 
-              boxShadow: `0 0 15px ${isCasting ? '#ef4444' : '#10b981'}`,
-              animation: isCasting ? 'pulse 0.5s infinite' : 'none'
-            }} />
-            <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '900', letterSpacing: '0.15em' }}>
-              {isCasting ? 'MACHINE BUSY' : 'READY TO VOTE'}
-            </span>
+        {/* Machine Status Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3.5rem', background: '#020617', padding: '1.25rem 2rem', borderRadius: '1.25rem', border: '1px solid #334155' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: isCasting ? '#ef4444' : '#10b981', boxShadow: `0 0 15px ${isCasting ? '#ef4444' : '#10b981'}` }} />
+              <span style={{ fontSize: '0.75rem', fontWeight: '900', color: '#94a3b8', letterSpacing: '0.1em' }}>{isCasting ? 'MACHINE BUSY' : 'READY TO VOTE'}</span>
+            </div>
+            <div style={{ width: '1px', height: '16px', background: '#334155' }} />
+            <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#475569', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Shield size={14} /> SECURE BOOTH #42
+            </div>
           </div>
-          <div style={{ color: '#475569', fontSize: '0.7rem', fontWeight: '800' }}>EVM v.2026-BHARAT</div>
+          <div style={{ color: '#475569', fontSize: '0.65rem', fontWeight: '900', letterSpacing: '0.1em' }}>v2.0-STABLE</div>
         </div>
 
-        {/* Candidate Rows */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* Ballot Interface */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {candidates.map((c) => (
             <div key={c.id} style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              background: 'rgba(255,255,255,0.02)', 
-              padding: '1rem 1.5rem', 
-              borderRadius: '0.75rem', 
+              background: 'rgba(255,255,255,0.03)', 
+              padding: '1.5rem 2.5rem', 
+              borderRadius: '1.5rem', 
               border: '1px solid rgba(255,255,255,0.05)',
-              position: 'relative'
+              transition: 'all 0.3s',
+              boxShadow: selectedId === c.id ? `0 0 30px ${c.color}20` : 'none'
             }}>
-              {/* LED Indicator */}
               <div style={{ 
-                width: '16px', 
-                height: '16px', 
-                borderRadius: '50%', 
-                background: selectedId === c.id ? '#ef4444' : '#020617',
-                border: '2px solid #334155',
-                marginRight: '1.5rem',
-                boxShadow: selectedId === c.id ? '0 0 20px #ef4444' : 'none',
-                transition: 'all 0.1s'
+                width: '24px', height: '24px', borderRadius: '50%', 
+                background: selectedId === c.id ? c.color : '#020617', 
+                border: `3px solid ${selectedId === c.id ? c.color : '#334155'}`,
+                boxShadow: selectedId === c.id ? `0 0 20px ${c.color}` : 'none',
+                marginRight: '2rem'
               }} />
-
+              
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.125rem', fontWeight: '800', color: '#f1f5f9' }}>{c.name}</span>
-                  <c.icon size={28} color={c.color} />
+                <h4 style={{ fontSize: '1.35rem', fontWeight: '900', color: '#f1f5f9', marginBottom: '0.25rem' }}>{c.name}</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <c.icon size={18} color={c.color} />
+                  <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: '800', letterSpacing: '0.05em' }}>{c.party.toUpperCase()}</span>
                 </div>
-                <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: '800', letterSpacing: '0.05em' }}>{c.party.toUpperCase()}</span>
               </div>
 
-              {/* Physical Blue Button */}
               <motion.button 
-                whileTap={{ scale: 0.9 }}
+                whileHover={!isCasting ? { scale: 1.05 } : {}}
+                whileTap={!isCasting ? { scale: 0.95, y: 5 } : {}}
                 onClick={() => handleVote(c.id)}
                 disabled={isCasting || selectedId !== null}
                 style={{ 
-                  marginLeft: '2rem',
-                  width: '70px',
-                  height: '45px',
-                  background: 'linear-gradient(to bottom, #2563eb, #1e40af)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  boxShadow: '0 6px 0 #1e3a8a, 0 10px 15px rgba(0,0,0,0.4)',
+                  width: '80px', height: '55px', 
+                  background: 'linear-gradient(to bottom, #3b82f6, #1d4ed8)', 
+                  border: 'none', borderRadius: '1rem',
+                  boxShadow: '0 8px 0 #1e3a8a, 0 15px 30px rgba(0,0,0,0.5)',
                   cursor: isCasting ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  position: 'relative'
                 }}
               >
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)' }} />
+                {selectedId === c.id && (
+                  <motion.div 
+                    initial={{ scale: 0, opacity: 1 }}
+                    animate={{ scale: 4, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    style={{ position: 'absolute', inset: 0, background: 'var(--primary)', borderRadius: '1rem', zIndex: -1 }}
+                  />
+                )}
+                <div style={{ width: '32px', height: '32px', border: '4px solid rgba(255,255,255,0.2)', borderRadius: '50%', margin: '0 auto' }} />
               </motion.button>
             </div>
           ))}
         </div>
 
-        {/* Instructions Footer */}
-        <div style={{ marginTop: '2.5rem', padding: '1.25rem', background: '#020617', borderRadius: '0.75rem', textAlign: 'center', border: '1px dashed #1e293b' }}>
-          <p style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '700', letterSpacing: '0.05em' }}>
-            PRESS THE BLUE BUTTON AGAINST YOUR CANDIDATE
-          </p>
+        <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+          <p style={{ color: '#475569', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '0.05em' }}>PRESS THE BLUE BUTTON CORRESPONDING TO YOUR CHOICE</p>
         </div>
       </div>
 
-      {/* VVPAT Printer Animation */}
+      {/* Proper VVPAT Overlay */}
       <AnimatePresence>
         {showVVPAT && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8, y: -50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
             style={{ 
-              width: '350px', 
-              background: '#ffffff', 
-              borderRadius: '0.5rem', 
-              padding: '2rem', 
-              boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.4)',
-              border: '1px solid #e2e8f0',
-              position: 'relative'
+              width: '400px', background: 'white', padding: '3rem', borderRadius: '1rem', 
+              boxShadow: '0 50px 100px rgba(0,0,0,0.5)', position: 'relative', zIndex: 100
             }}
           >
-            <div style={{ position: 'absolute', top: '-15px', left: '50%', transform: 'translateX(-50%)', width: '220px', height: '25px', background: '#1e293b', borderRadius: '6px' }} />
+            <div style={{ position: 'absolute', top: '-15px', left: '50%', transform: 'translateX(-50%)', width: '250px', height: '25px', background: '#1e293b', borderRadius: '6px' }} />
             <div style={{ textAlign: 'center', color: '#0f172a' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                <Printer size={32} color="#64748b" />
+              <Printer size={40} color="#64748b" style={{ margin: '0 auto 2rem' }} />
+              <div style={{ border: '4px dashed #e2e8f0', padding: '2.5rem', borderRadius: '1.5rem', background: '#f8fafc' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '900', color: '#94a3b8', marginBottom: '1.5rem', letterSpacing: '0.2em' }}>OFFICIAL VVPAT SLIP</div>
+                <h4 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '0.5rem' }}>{vvpatCandidate?.name}</h4>
+                <p style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--primary)', marginBottom: '1.5rem' }}>{vvpatCandidate?.party}</p>
+                {vvpatCandidate && <vvpatCandidate.icon size={80} color={vvpatCandidate.color} />}
               </div>
-              <p style={{ fontSize: '0.75rem', fontWeight: '900', letterSpacing: '0.15em', marginBottom: '1.5rem', color: '#475569' }}>VVPAT AUDIT SLIP</p>
-              <div style={{ border: '3px dashed #cbd5e1', padding: '2rem', borderRadius: '1rem', background: '#f8fafc' }}>
-                <h4 style={{ fontSize: '1.5rem', fontWeight: '900', marginBottom: '0.5rem' }}>{vvpatCandidate?.name}</h4>
-                <p style={{ fontSize: '0.9rem', fontWeight: '800', color: 'var(--primary)' }}>{vvpatCandidate?.party}</p>
-                <div style={{ marginTop: '1.5rem' }}>
-                  {vvpatCandidate && <vvpatCandidate.icon size={60} color={vvpatCandidate.color} />}
-                </div>
-              </div>
-              <p style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '2rem', lineHeight: '1.5' }}>
-                Verification active for 7 seconds.<br/>Slip will drop into secure ballot container.
-              </p>
+              <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '2.5rem', fontWeight: '700' }}>VERIFY YOUR CHOICE. THIS SLIP WILL BE STORED SECURELY.</p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {isCasting && !showVVPAT && selectedId && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ textAlign: 'center' }}>
-          <CheckCircle2 size={64} color="#10b981" style={{ marginBottom: '1.5rem' }} />
-          <h3 style={{ fontSize: '1.75rem', fontWeight: '900' }}>Vote Recorded Successfully</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem' }}>Session closed. Please exit the booth area.</p>
-        </motion.div>
-      )}
     </div>
   );
 }

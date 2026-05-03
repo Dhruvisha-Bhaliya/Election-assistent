@@ -1,22 +1,42 @@
 'use client';
 
+/**
+ * @file AuthContext.tsx
+ * @description Centralized Authentication and Voting State Provider.
+ * Handles user sessions, voter registration, and real-time voting tallies.
+ */
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+/**
+ * @interface User
+ * @property {string} email - Unique identifier for the user.
+ * @property {string} name - Display name of the citizen.
+ * @property {string} region - Assigned electoral region.
+ */
 interface User {
   email: string;
   name: string;
   region: string;
 }
 
+/**
+ * @interface AuthContextType
+ * @description Defines the shape of the Auth Context.
+ */
 interface AuthContextType {
   user: User | null;
+  /** Authenticates user against local registry */
   login: (email: string, password: string) => void;
+  /** Registers a new citizen and assigns an electoral region */
   register: (email: string, name: string, password: string) => void;
+  /** Terminates the current session */
   logout: () => void;
   isLoading: boolean;
   voterCount: number;
   incrementVoterCount: () => void;
   voteTallies: Record<number, number>;
+  /** Cryptographically sealed vote recording simulation */
   recordVote: (candidateId: number) => void;
 }
 
@@ -26,6 +46,10 @@ const initialTallies = { 1: 4205, 2: 3890, 3: 4112 };
 
 const regions = ['Bengaluru North', 'Mumbai South', 'Delhi Central', 'Hyderabad East', 'Chennai West'];
 
+/**
+ * @component AuthProvider
+ * @description Provides auth and voting state to the entire application.
+ */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,9 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const randomRegion = regions[Math.floor(Math.random() * regions.length)];
-    const newUser = { email, name, region: randomRegion, password }; // Storing password for demo simulation
+    const newUser = { email, name, region: randomRegion, password };
     
-    // Save to users list but don't set as current user (require manual login)
     localStorage.setItem('civic_users', JSON.stringify([...users, newUser]));
   };
 
@@ -96,6 +119,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * @hook useAuth
+ * @description Access the authentication and voting state.
+ * @throws {Error} If used outside of AuthProvider.
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
