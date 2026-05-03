@@ -103,6 +103,26 @@ gcloud run deploy election-assistant \
   --clear-base-image
 ```
 
+### 🛠️ Troubleshooting Deployment
+
+If you encounter the following common errors:
+
+#### 1. "Unsupported engine" (Next.js 15/16)
+Next.js 15+ and 16 require **Node.js 20.9.0 or higher**. If your build fails with an `EBADENGINE` error, ensure your `Dockerfile` starts with:
+```dockerfile
+FROM node:20-slim
+```
+*VoterConnect is already pre-configured with a Node 20 multi-stage build.*
+
+#### 2. "Missing required argument [--clear-base-image]"
+This happens when you redeploy a service that was originally built with a different method. Always include the flag:
+```bash
+--clear-base-image
+```
+
+#### 3. "TypeError: expected string... got NoneType"
+This is a rare `gcloud` CLI error that usually occurs when the build fails prematurely. Fixing the Node version in the `Dockerfile` and ensuring `.dockerignore` exists will resolve the root cause.
+
 ---
 
 ## 🛠️ Getting Started
