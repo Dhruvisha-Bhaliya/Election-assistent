@@ -75,6 +75,34 @@ graph TD
 *   **Firebase Guardrails**: Strict Security Rules prevent any user from writing more than once to the vote collection.
 *   **Audit Logging**: Every system interaction is logged for post-election forensic analysis.
 
+## ☁️ Deployment & Infrastructure
+
+The project is optimized for **Google Cloud Run** using a high-performance containerization strategy.
+
+### 1. The Multi-Stage Docker Theory
+We use a **Three-Stage Docker Build** to ensure the production image is as lean as possible:
+*   **Deps Stage**: Installs only the required dependencies using `npm ci`.
+*   **Builder Stage**: Compiles the TypeScript code into an optimized Next.js standalone bundle.
+*   **Runner Stage**: A minimal runtime environment that only contains the `standalone` output, reducing the image size by up to 80%.
+
+### 2. Environment Variables & Build-Time Logic
+Next.js bakes `NEXT_PUBLIC_` variables into the JavaScript bundle during the `build` phase. To deploy successfully:
+*   **Build-Time Vars**: Ensure your CI/CD (Cloud Build) has access to the Firebase API keys during the `npm run build` step.
+*   **Runtime Vars**: Sensitive keys (like `GOOGLE_GEMINI_API_KEY`) can be injected as Cloud Run Secrets.
+
+### 🚀 Deploying to Cloud Run
+
+If your build fails, ensure you have a `.dockerignore` file to prevent local `node_modules` from interfering with the remote Linux build.
+
+```bash
+# Standard Deployment Command
+gcloud run deploy election-assistant \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --clear-base-image
+```
+
 ---
 
 ## 🛠️ Getting Started
